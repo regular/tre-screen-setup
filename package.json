@@ -1,0 +1,35 @@
+{
+  "name": "tre-screen-setup",
+  "version": "1.0.0",
+  "description": "montor a station's screens property and reconfigure X",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "tre-screen-setup": "index.js"
+  },
+  "keywords": [
+    "tre"
+  ],
+  "author": "Jan Bölsche <jan@lagomorph.de> (https://regular.codes/)",
+  "license": "ISC",
+  "dependencies": {
+    "collect-mutations": "^1.0.5",
+    "debug": "^4.1.1",
+    "minimist": "^1.2.0",
+    "mutant": "^3.22.1",
+    "pull-stream": "^3.6.9",
+    "scuttlebot-release": "^11.3.3",
+    "tre-prototypes": "^1.6.0"
+  },
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/regular/tre-screen-setup.git"
+  },
+  "bugs": {
+    "url": "https://github.com/regular/tre-screen-setup/issues"
+  },
+  "homepage": "https://github.com/regular/tre-screen-setup#readme"
+}
