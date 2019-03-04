@@ -13,7 +13,7 @@ module.exports = function TrackStation(ssb) {
   const watchMerged = WatchMerged(ssb)
   ssb.whoami((err, feed)=>{
     if (err) return console.error(err.message)
-    console.log('screen-setup, feedis is', feed.id)
+    debug('feedis is', feed.id)
     feedId.set(feed.id)
   })
 
@@ -30,7 +30,6 @@ module.exports = function TrackStation(ssb) {
       drain
     )
     const current = computed([feedId, msgs], (id, msgs) => {
-      console.log('MSGs', msgs)
       // find messages about us
       const aboutUs = msgs.filter(kv => {
         return kv && kv.value.content.about == id
@@ -38,7 +37,7 @@ module.exports = function TrackStation(ssb) {
       // sort by timestamp
       const sorted = aboutUs.sort((a,b) => a.value.timestamp - b.value.timestamp)
       const station = sorted[0] && sorted[0].value.content.station
-      console.log('current station', station)
+      debug('current station', station)
       return sorted[0] || null
     })
     current.abort = drain.abort

@@ -5,7 +5,21 @@ const ssbClient = require('scuttlebot-release/node_modules/ssb-client')
 const ssbKeys = require('scuttlebot-release/node_modules/ssb-keys')
 const TrackStation = require('./track-station')
 const watch = require('mutant/watch')
+const xrandr = require('./xrandr')
+const debounce = require('debounce')
+const debug = require('debug')('tre-screen-setup')
 const argv = require('minimist')(process.argv.slice(2))
+
+const onScreenConfigChanged = debounce(function(screens) {
+  console.log('\nNew Screen Setup:')
+  xrandr([], {}, (err, outputs) => {
+    const cmds = outputs.map( (o, i)=>{
+      s = screens[i] || {rotation: 'normal'}
+      return `--output ${o.name} --size ${s.width || o.xres}x${s.height || o.yres} --rotate ${s.rotate||'normal'}`
+    })
+    console.log(`xrandr ${cmds.join(' ')}`)
+  })
+}, 1000)
 
 if (argv._.length<1) {
   console.error(`USAGE: track-station CONFIGFILE`)
@@ -48,18 +62,17 @@ function showScreens(conf, keys) {
     const station = trackStation()
     watch(station, kv => {
       if (!kv) {
-        console.log('No station selected')
+        debug('No station selected')
+        onScreenConfigChanged([])
         return
       }
       const screens = kv.value.content.screens
       if (!screens) {
-        console.log('No screens defined in station')
+        onScreenConfigChanged([])
+        debug('No screens defined in station')
         return
       }
-      console.log('\nNew Screen Setup:')
-      screens.forEach( (s, i)=>{
-        console.log(`- #${i}: ${s.width}x${s.height} rotate: ${s.rotate||'No'}`)
-      })
+      onScreenConfigChanged(screens)
     })
   })
 }
