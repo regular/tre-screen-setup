@@ -8,16 +8,22 @@ const watch = require('mutant/watch')
 const xrandr = require('./xrandr')
 const debounce = require('debounce')
 const debug = require('debug')('tre-screen-setup')
+const rotateInput = require('rotate-pointer-devices')
+const multicb = require('multicb')
 const argv = require('minimist')(process.argv.slice(2))
 
-const onScreenConfigChanged = debounce(function(screens) {
-  console.log('\nNew Screen Setup:')
-  xrandr([], {}, (err, outputs) => {
+const onScreenConfigChanged = debounce(function(screens, input) {
+  const done = multicb({pluck:1, spread: true})
+  const inputRotation = input && input.rotate || 'normal'
+  rotateInput(inputRotation, done())
+  xrandr([], {}, done())
+
+  done((err, inputCmds, outputs) => {
     const cmds = outputs.map( (o, i)=>{
       s = screens[i] || {rotation: 'normal'}
       return `--output ${o.name} --size ${s.width || o.xres}x${s.height || o.yres} --rotate ${s.rotate||'normal'}`
     })
-    console.log(`xrandr ${cmds.join(' ')}`)
+    console.log(`${inputCmds}\nxrandr ${cmds.join(' ')}`)
   })
 }, 1000)
 
@@ -63,16 +69,12 @@ function showScreens(conf, keys) {
     watch(station, kv => {
       if (!kv) {
         debug('No station selected')
-        onScreenConfigChanged([])
+        onScreenConfigChanged([], {})
         return
       }
       const screens = kv.value.content.screens
-      if (!screens) {
-        onScreenConfigChanged([])
-        debug('No screens defined in station')
-        return
-      }
-      onScreenConfigChanged(screens)
+      const input = kv.value.content.input
+      onScreenConfigChanged(screens || [], input || {})
     })
   })
 }

@@ -18,9 +18,11 @@
     "debounce": "^1.2.0",
     "debug": "^4.1.1",
     "minimist": "^1.2.0",
+    "multicb": "^1.2.2",
     "mutant": "^3.22.1",
     "pull-split": "^0.2.0",
     "pull-stream": "^3.5.0",
+    "rotate-pointer-devices": "^1.1.0",
     "scuttlebot-release": "^11.3.3",
     "stream-to-pull-stream": "^1.7.2",
     "tre-prototypes": "^1.6.0"
