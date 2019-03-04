@@ -31,7 +31,7 @@ const onScreenConfigChanged = debounce(function(screens, input) {
 }, 1000)
 
 if (argv._.length<1) {
-  console.error(`USAGE: track-station CONFIGFILE`)
+  console.error(`USAGE: tre-screen-setup --restart RESTARTCOMMAND SSBCONFIGFILE`)
   process.exit(1)
 }
 
