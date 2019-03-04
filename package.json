@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "montor a station's screens property and reconfigure X",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape test/**"
   },
   "bin": {
     "tre-screen-setup": "index.js"
@@ -18,12 +18,13 @@
     "debug": "^4.1.1",
     "minimist": "^1.2.0",
     "mutant": "^3.22.1",
-    "pull-stream": "^3.6.9",
+    "pull-stream": "^3.5.0",
     "scuttlebot-release": "^11.3.3",
-    "tre-prototypes": "^1.6.0"
+    "tre-prototypes": "^1.6.0",
+    "pull-split": "^0.2.0",
+    "stream-to-pull-stream": "^1.7.2"
   },
   "main": "index.js",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/regular/tre-screen-setup.git"
@@ -31,5 +32,13 @@
   "bugs": {
     "url": "https://github.com/regular/tre-screen-setup/issues"
   },
-  "homepage": "https://github.com/regular/tre-screen-setup#readme"
+  "homepage": "https://github.com/regular/tre-screen-setup#readme",
+  "devDependencies": {
+    "from2": "^2.3.0",
+    "from2-string": "^1.1.0",
+    "tape": "^4.10.1"
+  },
+  "directories": {
+    "test": "test"
+  }
 }
