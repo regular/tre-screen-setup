@@ -12,6 +12,8 @@ const rotateInput = require('rotate-pointer-devices')
 const multicb = require('multicb')
 const argv = require('minimist')(process.argv.slice(2))
 
+const {restart} = argv
+
 const onScreenConfigChanged = debounce(function(screens, input) {
   const done = multicb({pluck:1, spread: true})
   const inputRotation = input && input.rotate || 'normal'
@@ -24,6 +26,7 @@ const onScreenConfigChanged = debounce(function(screens, input) {
       return `--output ${o.name} --size ${s.width || o.xres}x${s.height || o.yres} --rotate ${s.rotate||'normal'}`
     })
     console.log(`${inputCmds}\nxrandr ${cmds.join(' ')}`)
+    if (restart) console.log(restart)
   })
 }, 1000)
 
