@@ -50,7 +50,7 @@ const onScreenConfigChanged = debounce(function(stage, screens, input) {
     console.log(`${inputCmds}\nxrandr ${cmds.join(' ')}`)
     
     // move mouse out of sight
-    console.lgg(`xdotool mousemove ${stage.width || 1920} ${stage.height || 1080}`)
+    console.log(`xdotool mousemove ${stage.width || 1920} ${stage.height || 1080}`)
     
     if (restart) console.log(restart)
   })
