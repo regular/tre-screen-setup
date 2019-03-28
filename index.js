@@ -14,17 +14,39 @@ const argv = require('minimist')(process.argv.slice(2))
 
 const {restart} = argv
 
-const onScreenConfigChanged = debounce(function(screens, input) {
+const onScreenConfigChanged = debounce(function(stage, screens, input) {
   const done = multicb({pluck:1, spread: true})
   const inputRotation = input && input.rotate || 'normal'
   rotateInput(inputRotation, done())
   xrandr([], {}, done())
 
+  const DEFAULT = {
+    rotate: 'normal',
+    ox: 0,
+    oy :0
+  }
+
   done((err, inputCmds, outputs) => {
-    const cmds = outputs.map( (o, i)=>{
-      s = screens[i] || {rotation: 'normal'}
-      return `--output ${o.name} --size ${s.width || o.xres}x${s.height || o.yres} --rotate ${s.rotate||'normal'}`
+    const output_cmds = outputs.map( (o, i)=>{
+      const s = Object.assign({}, DEFAULT, screens[i] || {})
+      let c = ''
+      c += `--output ${o.name}`
+      c += ` --mode ${s.width || o.xres}x${s.height || o.yres}`
+      c += ` --rotate ${s.rotate}`
+      c += ` --pos ${s.ox || o.left}x${s.oy || o.top}`
+      if (s.rate) c += ` --rate ${s.rate}`
+      if (s.reflect) c += ` --reflect ${s.reflect}`
+      if (s.brightness) c += ` --brightness ${s.brightness}`
+      if (s.gammaRGB && s.gammaRGB.length == 3) {
+        c+=' --gamma ' + s.gammaRGB.map(x => Number(x) || 1).join(':')
+      } 
+      return c
     })
+    const stage_cmds = []
+    if (stage.width && stage.height) {
+      stage_cmds.push(`--fb ${stage.width}x${stage.height}`)
+    }
+    const cmds = stage_cmds.concat(output_cmds)
     console.log(`${inputCmds}\nxrandr ${cmds.join(' ')}`)
     if (restart) console.log(restart)
   })
@@ -72,12 +94,13 @@ function showScreens(conf, keys) {
     watch(station, kv => {
       if (!kv) {
         debug('No station selected')
-        onScreenConfigChanged([], {})
+        onScreenConfigChanged({}, [], {})
         return
       }
+      const stage = kv.value.content.stage
       const screens = kv.value.content.screens
       const input = kv.value.content.input
-      onScreenConfigChanged(screens || [], input || {})
+      onScreenConfigChanged(stage || {}, screens || [], input || {})
     })
   })
 }
