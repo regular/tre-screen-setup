@@ -22,8 +22,12 @@ const onScreenConfigChanged = debounce(function(stage, screens, input) {
 
   const DEFAULT = {
     rotate: 'normal',
+    reflect: 'normal',
+    rate: 60,
+    brightness: 1,
     ox: 0,
-    oy :0
+    oy :0,
+    gummaRGB: [1, 1, 1]
   }
 
   done((err, inputCmds, outputs) => {
@@ -33,11 +37,11 @@ const onScreenConfigChanged = debounce(function(stage, screens, input) {
       c += `--output ${o.name}`
       c += ` --mode ${s.width || o.xres}x${s.height || o.yres}`
       c += ` --rotate ${s.rotate}`
-      c += ` --pos ${s.ox || o.left}x${s.oy || o.top}`
-      if (s.rate) c += ` --rate ${s.rate}`
-      if (s.reflect) c += ` --reflect ${s.reflect}`
-      if (s.brightness) c += ` --brightness ${s.brightness}`
-      if (s.gammaRGB && s.gammaRGB.length == 3) {
+      c += ` --pos ${s.ox !== undefined ? s.ox : o.left}x${s.oy !== undefined ? s.oy : o.top}`
+      c += ` --rate ${s.rate}`
+      c += ` --reflect ${s.reflect}`
+      c += ` --brightness ${s.brightness}`
+      if (Array.isArray(s.gammaRGB) && s.gammaRGB.length == 3) {
         c+=' --gamma ' + s.gammaRGB.map(x => Number(x) || 1).join(':')
       } 
       return c
