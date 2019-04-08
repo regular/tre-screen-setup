@@ -56,6 +56,9 @@ const onScreenConfigChanged = debounce(function(stage, screens, input) {
     // move mouse out of sight
     console.log(`xdotool mousemove ${stage.width || 1920} ${stage.height || 1080}`)
     
+    // tell compiz to create one output spanning all the screens
+    console.log(`compiz-set-output-size ${stage.width || 1920} ${stage.height || 1080}`)
+
     if (restart) console.log(restart)
   })
 }, 1000)
