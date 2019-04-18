@@ -14,6 +14,8 @@ const argv = require('minimist')(process.argv.slice(2))
 
 const {restart} = argv
 
+let lastStageSize = {}
+
 const onScreenConfigChanged = debounce(function(stage, screens, input) {
   const done = multicb({pluck:1, spread: true})
   const inputRotation = input && input.rotate || 'normal'
@@ -57,9 +59,16 @@ const onScreenConfigChanged = debounce(function(stage, screens, input) {
     console.log(`xdotool mousemove ${stage.width || 1920} ${stage.height || 1080}`)
     
     // tell compiz to create one output spanning all the screens
-    console.log(`compiz-set-output-size ${stage.width || 1920} ${stage.height || 1080}`)
+    const stageSize = {
+      width: stage.width || 1920,
+      height: stage.height || 1080
+    }
+    console.log(`compiz-set-output-size ${stageSize.width} ${stageSize.height}`)
 
-    if (restart) console.log(restart)
+    if (JSON.stringify(lastStageSize) !== JSON.stringify(stageSize)) {
+      if (restart) console.log(restart)
+    }
+    lastStageSize = stageSize
   })
 }, 1000)
 
