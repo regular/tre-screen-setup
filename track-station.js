@@ -35,7 +35,7 @@ module.exports = function TrackStation(ssb) {
         return kv && kv.value.content.about == id
       })
       // sort by timestamp
-      const sorted = aboutUs.sort((a,b) => a.value.timestamp - b.value.timestamp)
+      const sorted = aboutUs.sort((a,b) => b.value.timestamp - a.value.timestamp)
       const station = sorted[0] && sorted[0].value.content.station
       debug('current station', station)
       return sorted[0] || null
