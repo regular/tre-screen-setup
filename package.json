@@ -1,6 +1,6 @@
 {
   "name": "tre-screen-setup",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "montor a station's screens property and reconfigure X",
   "scripts": {
     "test": "tape test/**"
